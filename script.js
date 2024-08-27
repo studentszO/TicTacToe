@@ -43,6 +43,8 @@ function boardController() {
 
     let activePlayer = PlayerX;
 
+    const getActivePlayer = () => activePlayer;
+
     const sayTurn = () => console.log(`It's ${activePlayer.name} turn`);
 
     const setActivePlayer = () => {
@@ -87,17 +89,50 @@ function boardController() {
         }
     };
 
-
-
-    return { playRound }
+    return { playRound, getActivePlayer }
 }
+const displayController = function() {
+    const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
+    const oIcon = "M11,7A2,2 0 0,0 9,9V15A2,2 0 0,0 11,17H13A2,2 0 0,0 15,15V9A2,2 0 0,0 13,7H11M11,9H13V15H11V9Z";
+    const playerMark = boardController().getActivePlayer().mark === "X" ? xIcon : oIcon;
+
+    // Render SVG icons
+    // THANKS TO THIS POST
+    // https://blog.q-bit.me/how-to-create-svg-elements-with-javascript/
+    function renderIcon(attr) {
+        const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const iconPath = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'path'
+        );
+        
+        iconSvg.setAttribute('viewBox', '0 0 24 24');
+    
+        iconPath.setAttribute("d", attr);
+    
+        iconSvg.append(iconPath);
+    
+        return iconSvg;
+    };
+
+    const renderMark = function() {
+        const cells = document.querySelectorAll(".game-block");
+        cells.forEach(function (e) {
+            e.addEventListener("click", function () {
+                e.appendChild(renderIcon(playerMark))
+                playerMark === xIcon ? e.firstChild.classList.add("x-icon") : e.firstChild.classList.add("o-icon");             });
+        });
+    }();
+}();
+
+
 
 const board = gameBoard();
 board.getBoard();
 const play = boardController().playRound;
 // FOR TESTING PURPOSE
-play(1)
-play(6)
-play(0)
-play(7)
-play(2)
+// play(1)
+// play(6)
+// play(0)
+// play(7)
+// play(2)

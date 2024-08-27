@@ -1,0 +1,20 @@
+* {
+    box-sizing: border-box;
+}
+.game-container {
+    width: 60vw;
+    height: 60vw;
+    background-color: blueviolet;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    border: 15px solid black;
+    
+}
+
+.game-block {
+    background-color: rgb(173, 173, 173);
+    border: 2px solid rgb(0, 0, 0);
+}
+.game-block:hover {
+    background-color: rgb(206, 154, 255);
+}

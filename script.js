@@ -46,45 +46,49 @@ function boardController() {
     };
 
     const playRound = (cell) => {
-        if (board.addMarkToCell(cell, activePlayer.mark) !== false)
+        if (board.addMarkToCell(cell, activePlayer.mark) !== false) {
+            checkWin();
             setActivePlayer();
+        }
         else {
             console.log("CHOOSE ANOTHER CELL!!")
         }
     }
 
-    const victoryLines = {
-        lineOne: [0, 1, 2],
-        lineTwo: [3, 4, 5],
-        lineThree: [6, 7, 8],
-        // lineFour:
-        // lineFive:
-        // lineSix:
-        // lineSeven:
-    }
+    const checkWin = () => {
+        const victoryLines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
 
+        const isSameMark = (arr) => arr.every(mark => mark === mark[0]);
 
-
-    const isThereAWinner = (player) => {
-        // lines = [1, 2, 3] [4, 5, 6] [7, 8, 9] [1, 4, 7] [2, 5, 8] [3, 6, 9] [1, 5, 9] [3, 5, 7]
-        if ((gameboardBox[1][2] === gameboardBox[2][2] === gameboardBox[3][2])
-         || (gameboardBox[4][2] === gameboardBox[5][2] === gameboardBox[6][2])
-         || (gameboardBox[7][2] === gameboardBox[8][2] === gameboardBox[9][2])
-         || (gameboardBox[1][2] === gameboardBox[4][2] === gameboardBox[7][2])
-         || (gameboardBox[2][2] === gameboardBox[5][2] === gameboardBox[8][2])
-         || (gameboardBox[3][2] === gameboardBox[6][2] === gameboardBox[9][2])
-         || (gameboardBox[1][2] === gameboardBox[5][2] === gameboardBox[9][2])
-         || (gameboardBox[3][2] === gameboardBox[5][2] === gameboardBox[7][2]))
-         console.log()
+        let isWinner;
+        for (let i = 0; i < victoryLines.length; i++) {
+            isWinner = [];
+                for (let j = 0; j < victoryLines[i].length; j++) {
+                    board.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(board.getBoard()[victoryLines[i][j]]);
+            }
+            if (isSameMark(isWinner)) {
+                alert(`Player${isWinner[0]} is the winner`);
+                break;
+            }
+        }
     }
 
     return { playRound }
 }
 
 const board = gameBoard();
+board.getBoard();
 const play = boardController().playRound;
 // FOR TESTING PURPOSE
-board.getBoard()
 play(1)
 play(6)
 play(0)

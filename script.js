@@ -22,7 +22,12 @@ function gameBoard() {
         }
     }
 
-    return { getBoard, addMarkToCell };
+    const resetBoard = () => {
+        for (i = 0; i < gameboardBox.length ;i++)
+            gameboardBox[i] = null;
+    };
+
+    return { getBoard, addMarkToCell, resetBoard };
 };
 
 function boardController() {
@@ -30,11 +35,11 @@ function boardController() {
     const PlayerX = {
         name: "Player X",
         mark: "X",
-    }
+    };
     const PlayerO = {
         name: "Player O",
         mark: "O",
-    }
+    };
 
     let activePlayer = PlayerX;
 
@@ -53,7 +58,7 @@ function boardController() {
         else {
             console.log("CHOOSE ANOTHER CELL!!")
         }
-    }
+    };
 
     const checkWin = () => {
         const victoryLines = [
@@ -80,7 +85,9 @@ function boardController() {
                 break;
             }
         }
-    }
+    };
+
+
 
     return { playRound }
 }

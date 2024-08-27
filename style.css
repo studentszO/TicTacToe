@@ -1,20 +1,46 @@
+:root {
+    --x-clr: #0cf;
+    --o-clr: rgb(255, 0, 43);
+    --border-clr: rgb(41, 41, 41);
+    --o-shadow: drop-shadow(0px 0px 9px var(--o-clr));
+    --x-shadow: drop-shadow(0px 0px 9px var(--x-clr));
+}
 * {
     box-sizing: border-box;
 }
+body {
+    background-color: rgb(24, 24, 24);
+}
+
 .game-container {
+    margin: auto;
+    margin-top: calc((100vh - 60vw) / 2);
     width: 60vw;
     height: 60vw;
     background-color: blueviolet;
     display: grid;
-    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-    border: 15px solid black;
-    
+    grid-template: repeat(3, calc(100%/3)) / repeat(3, calc(100%/3));
+    border: 15px solid var(--border-clr);
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
 }
 
 .game-block {
     background-color: rgb(173, 173, 173);
-    border: 2px solid rgb(0, 0, 0);
+    border: 2px solid var(--border-clr);
 }
 .game-block:hover {
     background-color: rgb(206, 154, 255);
+}
+
+.x-icon {
+    fill: var(--x-clr);
+    filter: var(--x-shadow);
+}
+.o-icon {
+    fill: var(--o-clr);
+    filter: var(--o-shadow);  
+}
+svg {
+    width: max-content;
+    height: max-content;
 }

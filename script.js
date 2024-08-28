@@ -45,7 +45,7 @@ function boardController() {
 
     const getActivePlayerMark = () => activePlayer.mark;
 
-    const sayTurn = () => console.log(`It's ${activePlayer.name} turn -- ${getActivePlayerMark()}`);
+    const sayTurn = () => console.log(`It's ${activePlayer.name}`);
 
     const setActivePlayer = () => {
         activePlayer = activePlayer === PlayerX ? PlayerO : PlayerX;
@@ -58,9 +58,13 @@ function boardController() {
         if (board.addMarkToCell(cell, activePlayer.mark) !== false) {
             checkWin();
             setActivePlayer();
+            displayController.renderMarksOnDOM(cell);
+            displayController.renderCurrentTurn();
+            return true;
         }
         else {
             console.log("CHOOSE ANOTHER CELL!!")
+            return false;
         }
     };
 
@@ -102,6 +106,7 @@ const controller = boardController()
 const play = controller.playRound;
 
 const displayController = function() {
+// function displayController() {
     const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
     const oIcon = "M11,7A2,2 0 0,0 9,9V15A2,2 0 0,0 11,17H13A2,2 0 0,0 15,15V9A2,2 0 0,0 13,7H11M11,9H13V15H11V9Z";
 
@@ -124,15 +129,35 @@ const displayController = function() {
         return iconSvg;
     };
 
-    const renderMark = function() {
-        const cells = document.querySelectorAll(".game-block");
-        cells.forEach(function (e) {
-            e.addEventListener("click", function () {
-                const playerMark = controller.getActivePlayerMark() === "X" ? xIcon : oIcon;
-                e.appendChild(renderIcon(playerMark))
-                playerMark === xIcon ? e.firstChild.classList.add("x-icon") : e.firstChild.classList.add("o-icon");
-                play(Array.from(e.parentNode.children).indexOf(e))
-            });
+
+
+    const renderCurrentTurn = () => {
+        const span = document.querySelector("span");
+        span.textContent = `Player ${controller.getActivePlayerMark()}`;
+    };
+
+
+
+
+    // RENDER IT ON PAGE LOAD
+    renderCurrentTurn();
+
+    const cells = document.querySelectorAll(".game-block");
+
+    const renderMarksOnDOM = function(index) {
+        const boardArray = board.getBoard();
+        console.log(boardArray)
+        if (boardArray[index] !== null) {
+            cells[index].appendChild(renderIcon(boardArray[index] === "X" ? xIcon : oIcon));
+            boardArray[index] === "X" ? cells[index].firstChild.classList.add("x-icon") : cells[index].firstChild.classList.add("o-icon");
+        }
+    };
+
+    cells.forEach(function (e) {
+        e.addEventListener("click", function () {
+            play(Array.from(e.parentNode.children).indexOf(e))
         });
-    }();
+    });
+        
+    return { renderMarksOnDOM, renderCurrentTurn }
 }();

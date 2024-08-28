@@ -43,13 +43,15 @@ function boardController() {
 
     let activePlayer = PlayerX;
 
-    const getActivePlayer = () => activePlayer;
+    const getActivePlayerMark = () => activePlayer.mark;
 
-    const sayTurn = () => console.log(`It's ${activePlayer.name} turn`);
+    const sayTurn = () => console.log(`It's ${activePlayer.name} turn -- ${getActivePlayerMark()}`);
 
     const setActivePlayer = () => {
         activePlayer = activePlayer === PlayerX ? PlayerO : PlayerX;
-        sayTurn(activePlayer);
+        // sayTurn(activePlayer);
+        // console.log(getActivePlayerMark());
+        // getActivePlayerMark()
     };
 
     const playRound = (cell) => {
@@ -74,13 +76,15 @@ function boardController() {
             [2, 4, 6]
         ]
 
-        const isSameMark = (arr) => arr.every(mark => mark === mark[0]);
+        const isSameMark = (array) => {
+            return (array.join("") === "XXX") || (array.join("") === "OOO")
+        }
 
         let isWinner;
         for (let i = 0; i < victoryLines.length; i++) {
             isWinner = [];
-                for (let j = 0; j < victoryLines[i].length; j++) {
-                    board.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(board.getBoard()[victoryLines[i][j]]);
+            for (let j = 0; j < victoryLines[i].length; j++) {
+                board.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(board.getBoard()[victoryLines[i][j]]);
             }
             if (isSameMark(isWinner)) {
                 alert(`Player${isWinner[0]} is the winner`);
@@ -89,12 +93,17 @@ function boardController() {
         }
     };
 
-    return { playRound, getActivePlayer }
+    return { playRound, getActivePlayerMark }
 }
+
+const board = gameBoard();
+board.getBoard();
+const controller = boardController()
+const play = controller.playRound;
+
 const displayController = function() {
     const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
     const oIcon = "M11,7A2,2 0 0,0 9,9V15A2,2 0 0,0 11,17H13A2,2 0 0,0 15,15V9A2,2 0 0,0 13,7H11M11,9H13V15H11V9Z";
-    const playerMark = boardController().getActivePlayer().mark === "X" ? xIcon : oIcon;
 
     // Render SVG icons
     // THANKS TO THIS POST
@@ -119,20 +128,11 @@ const displayController = function() {
         const cells = document.querySelectorAll(".game-block");
         cells.forEach(function (e) {
             e.addEventListener("click", function () {
+                const playerMark = controller.getActivePlayerMark() === "X" ? xIcon : oIcon;
                 e.appendChild(renderIcon(playerMark))
-                playerMark === xIcon ? e.firstChild.classList.add("x-icon") : e.firstChild.classList.add("o-icon");             });
+                playerMark === xIcon ? e.firstChild.classList.add("x-icon") : e.firstChild.classList.add("o-icon");
+                play(Array.from(e.parentNode.children).indexOf(e))
+            });
         });
     }();
 }();
-
-
-
-const board = gameBoard();
-board.getBoard();
-const play = boardController().playRound;
-// FOR TESTING PURPOSE
-// play(1)
-// play(6)
-// play(0)
-// play(7)
-// play(2)

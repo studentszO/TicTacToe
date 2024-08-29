@@ -136,7 +136,18 @@ const displayController = function() {
         span.textContent = `Player ${controller.getActivePlayerMark()}`;
     };
 
-
+    const renderResetBtn = function() {
+        const button = document.querySelector(".reset-btn");
+        function resetDOM() {
+            let i = 0;
+            while (i < 9) {
+                if (cells[i].childElementCount > 0)
+                    cells[i].removeChild(cells[i].firstElementChild);
+                i++;
+            }
+        }
+        button.addEventListener("click", () => board.resetBoard() | resetDOM());
+    }();
 
 
     // RENDER IT ON PAGE LOAD
@@ -147,6 +158,8 @@ const displayController = function() {
     const renderMarksOnDOM = function(index) {
         const boardArray = board.getBoard();
         console.log(boardArray)
+        console.log(cells[2].childElementCount)
+        console.log(cells[index])
         if (boardArray[index] !== null) {
             cells[index].appendChild(renderIcon(boardArray[index] === "X" ? xIcon : oIcon));
             boardArray[index] === "X" ? cells[index].firstChild.classList.add("x-icon") : cells[index].firstChild.classList.add("o-icon");

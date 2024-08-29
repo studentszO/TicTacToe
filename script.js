@@ -133,12 +133,27 @@ const displayController = function() {
         return iconSvg;
     };
 
+    const renderCurrentTurn = (name) => {
+        // remove h3 if it's already in the DOM
+        document.querySelector("h3").remove();
 
+        const currentTurnText = document.querySelector(".info-container");
+        const h3 = document.createElement("h3");
+        const span = document.createElement("span");
 
-    const renderCurrentTurn = () => {
-        const span = document.querySelector("span");
-        span.textContent = `Player ${controller.getActivePlayerMark()}`;
-    };
+        h3.textContent = "CURRENT TURN"
+        currentTurnText.prepend(h3)
+
+        const getIcon = () => {
+            const icon = controller.getActivePlayerMark() === "X" ? renderIcon(xIcon) : renderIcon(oIcon)
+            controller.getActivePlayerMark() === "X" ? icon.classList.add("x-icon") : icon.classList.add("o-icon");
+            return icon;
+        }
+
+        span.textContent = `${name}`;
+        span.classList.add(controller.getActivePlayerMark() === "X" ? "x-turn" : "o-turn");
+        h3.append(span, getIcon())
+      };
 
     const renderResetBtn = function() {
         const button = document.querySelector(".reset-btn");
@@ -155,7 +170,7 @@ const displayController = function() {
 
 
     // RENDER IT ON PAGE LOAD
-    renderCurrentTurn();
+    renderCurrentTurn("StéphO");
 
     const cells = document.querySelectorAll(".game-block");
 

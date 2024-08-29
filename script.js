@@ -14,10 +14,12 @@ function gameBoard() {
     const addMarkToCell = (cell, mark) => {
         if (isEmptyCell(cell)) {
             gameboardBox[cell] = mark;
-            console.log("SUCCESS!");
+            // CONSOLE VERSION
+            // console.log("SUCCESS!");
             }
         else {
-            console.log(`The cell ${cell} is not empty!`);
+            // CONSOLE VERSION
+            // console.log(`The cell ${cell} is not empty!`);
             return false;
         }
     }
@@ -45,13 +47,11 @@ function boardController() {
 
     const getActivePlayerMark = () => activePlayer.mark;
 
-    const sayTurn = () => console.log(`It's ${activePlayer.name}`);
+    // ONLY USABLE FOR CONSOLE VERSION
+    // const sayTurn = () => console.log(`It's ${activePlayer.name}`);
 
     const setActivePlayer = () => {
         activePlayer = activePlayer === PlayerX ? PlayerO : PlayerX;
-        // sayTurn(activePlayer);
-        // console.log(getActivePlayerMark());
-        // getActivePlayerMark()
     };
 
     const playRound = (cell) => {
@@ -63,7 +63,8 @@ function boardController() {
             return true;
         }
         else {
-            console.log("CHOOSE ANOTHER CELL!!")
+            // CONSOLE VERSION
+            // console.log("CHOOSE ANOTHER CELL!!")
             return false;
         }
     };
@@ -85,6 +86,7 @@ function boardController() {
         }
 
         let isWinner;
+
         for (let i = 0; i < victoryLines.length; i++) {
             isWinner = [];
             for (let j = 0; j < victoryLines[i].length; j++) {
@@ -95,6 +97,9 @@ function boardController() {
                 break;
             }
         }
+
+        if (!board.getBoard().includes(null))
+            alert(`IT'S A DRAW!!`)
     };
 
     return { playRound, getActivePlayerMark }
@@ -106,7 +111,6 @@ const controller = boardController()
 const play = controller.playRound;
 
 const displayController = function() {
-// function displayController() {
     const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
     const oIcon = "M11,7A2,2 0 0,0 9,9V15A2,2 0 0,0 11,17H13A2,2 0 0,0 15,15V9A2,2 0 0,0 13,7H11M11,9H13V15H11V9Z";
 
@@ -157,9 +161,6 @@ const displayController = function() {
 
     const renderMarksOnDOM = function(index) {
         const boardArray = board.getBoard();
-        console.log(boardArray)
-        console.log(cells[2].childElementCount)
-        console.log(cells[index])
         if (boardArray[index] !== null) {
             cells[index].appendChild(renderIcon(boardArray[index] === "X" ? xIcon : oIcon));
             boardArray[index] === "X" ? cells[index].firstChild.classList.add("x-icon") : cells[index].firstChild.classList.add("o-icon");

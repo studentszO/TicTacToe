@@ -7,21 +7,63 @@
 }
 * {
     box-sizing: border-box;
+    font-family: sans-serif;
 }
+
 body {
     background-color: rgb(24, 24, 24);
 }
 
+h1 {
+    margin: auto;
+    font-size: 3rem;
+    background: linear-gradient(var(--x-clr), var(--o-clr));
+    font-weight: 1000;
+    letter-spacing: 5px;
+    width: max-content;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 20px 40px rgba(0,0,0,.5);   
+}
+
+.title {
+    width: max-content;
+    margin: auto;
+    display: grid;
+    height: 0px;
+    padding-top: calc((100vh - 60vh) / 6);
+}
+
+h1+div {
+    font-size: 1rem;
+    font-weight: 1000;
+    letter-spacing: 10px;
+    justify-self: end;
+    background: linear-gradient(90deg, rgb(58, 58, 58, 0.35), rgb(58, 58, 58), rgb(58, 58, 58, 0.35));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: -8px;
+    margin-right: -5px;
+}
+
 .game-container {
     margin: auto;
-    margin-top: calc((100vh - 60vw) / 2);
-    width: 60vw;
-    height: 60vw;
+    margin-top: calc((100vh - 60vh) / 2);
+    position: relative;
+    width: 60vh;
+    height: 60vh;
     background-color: blueviolet;
     display: grid;
     grid-template: repeat(3, calc(100%/3)) / repeat(3, calc(100%/3));
     border: 15px solid var(--border-clr);
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+.game-info {
+    width: 100%;
+    height: 0px;
 }
 
 .game-block {
@@ -43,4 +85,35 @@ body {
 svg {
     width: max-content;
     height: max-content;
+}
+
+.reset-btn {
+    background-color: #0cf;
+    color: #111;
+    width: max-content;
+    padding: 6px 22px 6px 25px;
+    border-radius: 5px;
+    font-weight: 1000;
+    letter-spacing: 3px;
+    font-size: 0.8rem;
+    height: max-content;
+}
+
+.info-container {
+    
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 60vh;
+    height: 2rem;
+    align-items: center;
+    align-content: center;
+    margin-top: 10px;
+    padding: 0 15px;
+        h3 {
+            color: rgb(187, 187, 187);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 1000;
+        }
 }

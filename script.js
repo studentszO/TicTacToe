@@ -1,4 +1,4 @@
-function gameBoard() {
+const gameBoard = function() {
     const gameboardBox = [];
     for (let cells = 0; cells < 9; cells++)
         gameboardBox.push(null);
@@ -30,7 +30,7 @@ function gameBoard() {
     };
 
     return { getBoard, addMarkToCell, resetBoard };
-};
+}();
 
 function boardController() {
 
@@ -58,7 +58,7 @@ function boardController() {
     };
 
     const playRound = (cell) => {
-        if (board.addMarkToCell(cell, activePlayer.mark) !== false) {
+        if (gameBoard.addMarkToCell(cell, activePlayer.mark) !== false) {
             checkWin();
             setActivePlayer();
             displayController.renderMarksOnDOM(cell);
@@ -98,23 +98,32 @@ function boardController() {
         for (let i = 0; i < victoryLines.length; i++) {
             isWinner = [];
             for (let j = 0; j < victoryLines[i].length; j++) {
-                board.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(board.getBoard()[victoryLines[i][j]]);
+                gameBoard.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(gameBoard.getBoard()[victoryLines[i][j]]);
             }
             if (isSameMark(isWinner)) {
-                alert(`Player${isWinner[0]} is the winner`);
+                const gameOverModal = document.querySelector(".game-over");
+                const div = document.createElement("div");
+                gameOverModal.appendChild(div);
+
+                const gameWinner = isWinner[0] === "X" ? PlayerX.name : PlayerO.name;
+                div.textContent = gameWinner + " WIN!";
+
+                gameOverModal.showModal();
+                setTimeout(() => {
+                    gameOverModal.close()
+                }, 3000);
+
                 break;
             }
         }
 
-        if (!board.getBoard().includes(null) && !isSameMark(isWinner))
+        if (!gameBoard.getBoard().includes(null) && !isSameMark(isWinner))
             alert(`IT'S A DRAW!!`)
     };
 
     return { playRound, getActivePlayer, changeName }
 }
 
-const board = gameBoard();
-board.getBoard();
 const controller = boardController()
 const play = controller.playRound;
 
@@ -144,6 +153,7 @@ const displayController = function() {
     const renderCurrentTurn = (name) => {
         // remove h3 if it's already in the DOM
         document.querySelector("h3").remove();
+
         if (!name)
             name = controller.getActivePlayer.name();
 
@@ -175,7 +185,7 @@ const displayController = function() {
                 i++;
             }
         }
-        button.addEventListener("click", () => board.resetBoard() | resetDOM());
+        button.addEventListener("click", () => gameBoard.resetBoard() | resetDOM());
     }();
 
     const renderChangeNamesBtn = function() {
@@ -195,7 +205,7 @@ const displayController = function() {
     const cells = document.querySelectorAll(".game-block");
 
     const renderMarksOnDOM = function(index) {
-        const boardArray = board.getBoard();
+        const boardArray = gameBoard.getBoard();
         if (boardArray[index] !== null) {
             cells[index].appendChild(renderIcon(boardArray[index] === "X" ? xIcon : oIcon));
             boardArray[index] === "X" ? cells[index].firstChild.classList.add("x-icon") : cells[index].firstChild.classList.add("o-icon");
@@ -204,9 +214,9 @@ const displayController = function() {
 
     cells.forEach(function (e) {
         e.addEventListener("click", function () {
-            play(Array.from(e.parentNode.children).indexOf(e))
+            play(Array.from(e.parentNode.children).indexOf(e));
         });
     });
         
-    return { renderMarksOnDOM, renderCurrentTurn }
+    return { renderMarksOnDOM, renderCurrentTurn };
 }();

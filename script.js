@@ -45,7 +45,10 @@ function boardController() {
 
     let activePlayer = PlayerX;
 
-    const getActivePlayerMark = () => activePlayer.mark;
+    const getActivePlayer = {
+        mark: function() { return activePlayer.mark },
+        name: function() { return activePlayer.name }
+    }
 
     // ONLY USABLE FOR CONSOLE VERSION
     // const sayTurn = () => console.log(`It's ${activePlayer.name}`);
@@ -59,7 +62,7 @@ function boardController() {
             checkWin();
             setActivePlayer();
             displayController.renderMarksOnDOM(cell);
-            displayController.renderCurrentTurn();
+            displayController.renderCurrentTurn(activePlayer.name);
             return true;
         }
         else {
@@ -68,6 +71,11 @@ function boardController() {
             return false;
         }
     };
+
+    const changeName = (newNameForX, newNameForO) => {
+        PlayerO.name = newNameForO;
+        PlayerX.name = newNameForX ;
+    }
 
     const checkWin = () => {
         const victoryLines = [
@@ -98,11 +106,11 @@ function boardController() {
             }
         }
 
-        if (!board.getBoard().includes(null))
+        if (!board.getBoard().includes(null) && !isSameMark(isWinner))
             alert(`IT'S A DRAW!!`)
     };
 
-    return { playRound, getActivePlayerMark }
+    return { playRound, getActivePlayer, changeName }
 }
 
 const board = gameBoard();
@@ -136,6 +144,8 @@ const displayController = function() {
     const renderCurrentTurn = (name) => {
         // remove h3 if it's already in the DOM
         document.querySelector("h3").remove();
+        if (!name)
+            name = controller.getActivePlayer.name();
 
         const currentTurnText = document.querySelector(".info-container");
         const h3 = document.createElement("h3");
@@ -145,13 +155,13 @@ const displayController = function() {
         currentTurnText.prepend(h3)
 
         const getIcon = () => {
-            const icon = controller.getActivePlayerMark() === "X" ? renderIcon(xIcon) : renderIcon(oIcon)
-            controller.getActivePlayerMark() === "X" ? icon.classList.add("x-icon") : icon.classList.add("o-icon");
+            const icon = controller.getActivePlayer.mark() === "X" ? renderIcon(xIcon) : renderIcon(oIcon)
+            controller.getActivePlayer.mark() === "X" ? icon.classList.add("x-icon") : icon.classList.add("o-icon");
             return icon;
         }
 
         span.textContent = `${name}`;
-        span.classList.add(controller.getActivePlayerMark() === "X" ? "x-turn" : "o-turn");
+        span.classList.add(controller.getActivePlayer.mark() === "X" ? "x-turn" : "o-turn");
         h3.append(span, getIcon())
       };
 
@@ -168,9 +178,19 @@ const displayController = function() {
         button.addEventListener("click", () => board.resetBoard() | resetDOM());
     }();
 
+    const renderChangeNamesBtn = function() {
+        const button = document.querySelector(".change-names-btn");
+        const modalInput = document.querySelector(".change-names-modal");
+        const modalValidation = document.querySelector("#names-submit-btn");
+        const xNewName = document.querySelector("#x-name");
+        const oNewName = document.querySelector("#o-name");
+
+        button.addEventListener("click", (e) => modalInput.showModal() | 
+        modalValidation.addEventListener("click", (e) => e.preventDefault() | modalInput.close() | controller.changeName(xNewName.value, oNewName.value) | renderCurrentTurn()));
+    }();
 
     // RENDER IT ON PAGE LOAD
-    renderCurrentTurn("StéphO");
+    renderCurrentTurn();
 
     const cells = document.querySelectorAll(".game-block");
 

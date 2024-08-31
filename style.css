@@ -110,6 +110,7 @@ svg {
 }
 
 .info-container {
+    font-size: 0.8rem;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -122,11 +123,16 @@ svg {
         h3 {
             color: rgb(187, 187, 187);
             text-transform: uppercase;
+            text-align: center;
             letter-spacing: 1px;
             font-weight: 1000;
             display: grid;
             grid-auto-flow: column;
             align-items: center;
+            span {
+                padding-right: 7px;
+                border-right: 2px rgb(187, 187, 187) solid;
+            }
         }
         div {
             display: flex;
@@ -151,11 +157,11 @@ svg {
 }
 
 .o-turn, .x-turn {
-    &::after {
+    /* &::after {
         content: " -";
         color: rgb(187, 187, 187);
         text-shadow: none;
-    }
+    } */
     &::before {
         content: ": ";
         color: rgb(187, 187, 187);
@@ -216,6 +222,9 @@ svg {
     div {
         display: grid;
         gap: 5px;
+    }
+    button {
+        border: none;
     }
     
 }

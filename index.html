@@ -34,11 +34,17 @@
             </div>
         </div>
         <dialog class="change-names-modal">
-            <label for="x-name">Player X's name:</label>
-            <input type="text" name="x-name" id="x-name">
-            <label for="o-name">Player O's name:</label>
-            <input type="text" name="o-name" id="o-name">
-            <button type="submit" id="names-submit-btn">GO!</button>
+            <div class="change-names-container">
+                <div>
+                    <label for="x-name" class="x-icon">Player X's name:</label>
+                    <input type="text" name="x-name" id="x-name" autocomplete="off">
+                </div>
+                <div>
+                    <label for="o-name" class="o-icon">Player O's name:</label>
+                    <input type="text" name="o-name" id="o-name" autocomplete="off">
+                </div>
+                <button type="submit" id="names-submit-btn" class="reset-btn">GO!</button>
+            </div>
         </dialog>
         <dialog class="game-over">GAME OVER!</dialog>
     </main>

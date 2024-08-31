@@ -78,11 +78,13 @@ h1+div {
 .x-icon {
     fill: var(--x-clr);
     filter: var(--x-shadow);
+    color: var(--x-clr);
 }
 
 .o-icon {
     fill: var(--o-clr);
     filter: var(--o-shadow);  
+    color: var(--o-clr);
 }
 
 svg {
@@ -159,4 +161,24 @@ svg {
         color: rgb(187, 187, 187);
         text-shadow: none;
     }
+}
+
+.game-over {
+    width: 60vh;
+    aspect-ratio: 1/1;
+    text-align: center;
+    color:rgb(243, 243, 243);
+    text-shadow: #111;
+    border: none;
+    grid-auto-flow: column;
+    font-size: 3rem;
+    font-weight: 1000;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 1) 0%, rgba(57, 57, 57, 0) 100%, rgba(57, 57, 57, 0) 100%);
+     div {
+        margin-top: auto;
+        height: 45vh;
+        display: grid;
+        place-items: center;
+        font-size: 4rem;
+     }
 }

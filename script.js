@@ -12,16 +12,10 @@ const gameBoard = function() {
     }
 
     const addMarkToCell = (cell, mark) => {
-        if (isEmptyCell(cell)) {
+        if (isEmptyCell(cell))
             gameboardBox[cell] = mark;
-            // CONSOLE VERSION
-            // console.log("SUCCESS!");
-            }
-        else {
-            // CONSOLE VERSION
-            // console.log(`The cell ${cell} is not empty!`);
+        else 
             return false;
-        }
     }
 
     const resetBoard = () => {
@@ -32,7 +26,7 @@ const gameBoard = function() {
     return { getBoard, addMarkToCell, resetBoard };
 }();
 
-function boardController() {
+const boardController = function() {
 
     const PlayerX = {
         name: "Player X",
@@ -48,10 +42,7 @@ function boardController() {
     const getActivePlayer = {
         mark: function() { return activePlayer.mark },
         name: function() { return activePlayer.name }
-    }
-
-    // ONLY USABLE FOR CONSOLE VERSION
-    // const sayTurn = () => console.log(`It's ${activePlayer.name}`);
+    };
 
     const setActivePlayer = () => {
         activePlayer = activePlayer === PlayerX ? PlayerO : PlayerX;
@@ -59,16 +50,12 @@ function boardController() {
 
     const playRound = (cell) => {
         if (gameBoard.addMarkToCell(cell, activePlayer.mark) !== false) {
-            checkWin();
-            setActivePlayer();
             displayController.renderMarksOnDOM(cell);
+            if (checkWin())
+                return false;
+            setActivePlayer();
             displayController.renderCurrentTurn(activePlayer.name);
             return true;
-        }
-        else {
-            // CONSOLE VERSION
-            // console.log("CHOOSE ANOTHER CELL!!")
-            return false;
         }
     };
 
@@ -101,19 +88,8 @@ function boardController() {
                 gameBoard.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(gameBoard.getBoard()[victoryLines[i][j]]);
             }
             if (isSameMark(isWinner)) {
-                const gameOverModal = document.querySelector(".game-over");
-                const div = document.createElement("div");
-                gameOverModal.appendChild(div);
-
                 const gameWinner = isWinner[0] === "X" ? PlayerX.name : PlayerO.name;
-                div.textContent = gameWinner + " WIN!";
-
-                gameOverModal.showModal();
-                setTimeout(() => {
-                    gameOverModal.close()
-                }, 3000);
-
-                break;
+                return displayController.renderWinner(gameWinner, victoryLines[i]);
             }
         }
 
@@ -122,10 +98,9 @@ function boardController() {
     };
 
     return { playRound, getActivePlayer, changeName }
-}
+}();
 
-const controller = boardController()
-const play = controller.playRound;
+const play = boardController.playRound;
 
 const displayController = function() {
     const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
@@ -155,7 +130,7 @@ const displayController = function() {
         document.querySelector("h3").remove();
 
         if (!name)
-            name = controller.getActivePlayer.name();
+            name = boardController.getActivePlayer.name();
 
         const currentTurnText = document.querySelector(".info-container");
         const h3 = document.createElement("h3");
@@ -165,13 +140,13 @@ const displayController = function() {
         currentTurnText.prepend(h3)
 
         const getIcon = () => {
-            const icon = controller.getActivePlayer.mark() === "X" ? renderIcon(xIcon) : renderIcon(oIcon)
-            controller.getActivePlayer.mark() === "X" ? icon.classList.add("x-icon") : icon.classList.add("o-icon");
+            const icon = boardController.getActivePlayer.mark() === "X" ? renderIcon(xIcon) : renderIcon(oIcon)
+            boardController.getActivePlayer.mark() === "X" ? icon.classList.add("x-icon") : icon.classList.add("o-icon");
             return icon;
         }
 
         span.textContent = `${name}`;
-        span.classList.add(controller.getActivePlayer.mark() === "X" ? "x-turn" : "o-turn");
+        span.classList.add(boardController.getActivePlayer.mark() === "X" ? "x-turn" : "o-turn");
         h3.append(span, getIcon())
       };
 
@@ -196,7 +171,7 @@ const displayController = function() {
         const oNewName = document.querySelector("#o-name");
 
         button.addEventListener("click", (e) => modalInput.showModal() | 
-        modalValidation.addEventListener("click", (e) => e.preventDefault() | modalInput.close() | controller.changeName(xNewName.value, oNewName.value) | renderCurrentTurn()));
+        modalValidation.addEventListener("click", (e) => e.preventDefault() | modalInput.close() | boardController().changeName(xNewName.value, oNewName.value) | renderCurrentTurn()));
     }();
 
     // RENDER IT ON PAGE LOAD
@@ -217,6 +192,29 @@ const displayController = function() {
             play(Array.from(e.parentNode.children).indexOf(e));
         });
     });
+
+    const renderWinner = function(name, array) {
+        const gameOverModal = document.querySelector(".game-over");
+        if (gameOverModal.childElementCount > 0)
+            gameOverModal.removeChild(gameOverModal.lastChild)
+        gameOverModal.childElementCount > 0
+        const div = document.createElement("div");
+
+        gameOverModal.appendChild(div);
+        div.textContent = name + " WIN!";
+        div.classList.add(boardController.getActivePlayer.mark() === "X" ? "x-icon" : "o-icon")
+        array.forEach((e) => {
+            cells[e].style.backgroundColor = "rgb(255, 255, 255, 0.3)";
+            setTimeout(() => {
+                cells[e].style.backgroundColor = "";
+            }, 3000);
+        });
+        gameOverModal.showModal();
+        gameOverModal.inert = true;
+        setTimeout(() => {
+            gameOverModal.close();
+        }, 3000);
+    };
         
-    return { renderMarksOnDOM, renderCurrentTurn };
+    return { renderMarksOnDOM, renderCurrentTurn, renderWinner };
 }();

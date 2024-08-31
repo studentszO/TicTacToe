@@ -61,7 +61,7 @@ const boardController = function() {
 
     const changeName = (newNameForX, newNameForO) => {
         PlayerO.name = newNameForO;
-        PlayerX.name = newNameForX ;
+        PlayerX.name = newNameForX;
     }
 
     const checkWin = () => {
@@ -100,8 +100,6 @@ const boardController = function() {
 
     return { playRound, getActivePlayer, changeName }
 }();
-
-const play = boardController.playRound;
 
 const displayController = function() {
     const xIcon = "M9,7L11,12L9,17H11L12,14.5L13,17H15L13,12L15,7H13L12,9.5L11,7H9Z";
@@ -173,7 +171,7 @@ const displayController = function() {
         const oNewName = document.querySelector("#o-name");
 
         button.addEventListener("click", (e) => modalInput.showModal() | 
-        modalValidation.addEventListener("click", (e) => e.preventDefault() | modalInput.close() | boardController().changeName(xNewName.value, oNewName.value) | renderCurrentTurn()));
+        modalValidation.addEventListener("click", (e) => e.preventDefault() | modalInput.close() | boardController.changeName(xNewName.value, oNewName.value) | renderCurrentTurn()));
     }();
 
     // RENDER IT ON PAGE LOAD
@@ -191,7 +189,7 @@ const displayController = function() {
 
     cells.forEach(function (e) {
         e.addEventListener("click", function () {
-            play(Array.from(e.parentNode.children).indexOf(e));
+            boardController.playRound(Array.from(e.parentNode.children).indexOf(e));
         });
     });
 

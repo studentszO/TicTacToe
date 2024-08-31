@@ -87,14 +87,15 @@ const boardController = function() {
             for (let j = 0; j < victoryLines[i].length; j++) {
                 gameBoard.getBoard()[victoryLines[i][j]] === null ? isWinner.push(0): isWinner.push(gameBoard.getBoard()[victoryLines[i][j]]);
             }
+            if (!gameBoard.getBoard().includes(null) && !isSameMark(isWinner))
+                return displayController.renderWinner("draw");
             if (isSameMark(isWinner)) {
                 const gameWinner = isWinner[0] === "X" ? PlayerX.name : PlayerO.name;
                 return displayController.renderWinner(gameWinner, victoryLines[i]);
             }
         }
+        return false;
 
-        if (!gameBoard.getBoard().includes(null) && !isSameMark(isWinner))
-            alert(`IT'S A DRAW!!`)
     };
 
     return { playRound, getActivePlayer, changeName }
@@ -161,6 +162,7 @@ const displayController = function() {
             }
         }
         button.addEventListener("click", () => gameBoard.resetBoard() | resetDOM());
+        return { resetDOM }
     }();
 
     const renderChangeNamesBtn = function() {
@@ -201,18 +203,27 @@ const displayController = function() {
         const div = document.createElement("div");
 
         gameOverModal.appendChild(div);
-        div.textContent = name + " WIN!";
-        div.classList.add(boardController.getActivePlayer.mark() === "X" ? "x-icon" : "o-icon")
-        array.forEach((e) => {
-            cells[e].style.backgroundColor = "rgb(255, 255, 255, 0.3)";
-            setTimeout(() => {
-                cells[e].style.backgroundColor = "";
-            }, 3000);
-        });
+        if (name === "draw") {
+            div.textContent = "AND IT'S A DRAW!";
+            div.classList.add("o-icon");
+            div.style.color = "red";
+        }
+        else {
+            div.textContent = name + " WIN!";
+            div.classList.add(boardController.getActivePlayer.mark() === "X" ? "x-icon" : "o-icon")
+            array.forEach((e) => {
+                cells[e].style.backgroundColor = "rgb(255, 255, 255, 0.3)";
+                setTimeout(() => {
+                    cells[e].style.backgroundColor = "";
+                }, 3000);
+            });
+        }
         gameOverModal.showModal();
         gameOverModal.inert = true;
         setTimeout(() => {
             gameOverModal.close();
+            gameBoard.resetBoard();
+            renderResetBtn.resetDOM();
         }, 3000);
     };
         
